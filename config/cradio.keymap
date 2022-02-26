@@ -4,99 +4,180 @@
  * SPDX-License-Identifier: MIT
  */
 
+
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/outputs.h>
+#include <dt-bindings/zmk/ext_power.h>
+ 
+#define CMK 0
+#define SYM 1
+#define NUM 2
+#define FUN 3
+#define NAV 4
 
-
-&mt {
-  //  flavor = "tap-preferred";
-   // tapping_term_ms = <200>;
+&caps_word {
+   continue-list = <UNDERSCORE MINUS BACKSPACE>;
 };
 
-/ { 
+
+/ {
+
+    behaviors {
+        skq: sticky_key_quick_release {
+            compatible = "zmk,behavior-sticky-key";
+            label = "STICKY_KEY_QUICK_RELEASE";
+            #binding-cells = <1>;
+            bindings = <&kp>;
+            release-after-ms = <1000>;
+            quick-release;
+        };
+    };
 
     combos {
         compatible = "zmk,combos";
-        combo_esc {
+        combo_wf_tab {
+            layers = <0 1 2 3 4 5>;
             timeout-ms = <50>;
-            key-positions = <0 1>;
-            bindings = <&kp ESC>;
-        };
-        
-         combo_tab {
-            timeout-ms = <50>;
-            key-positions = <10 11>;
+            // W + F
+            key-positions = <1 2>;
             bindings = <&kp TAB>;
         };
-        
-            combo_ralt {
+        combo_uy_del {
+            layers = <0 1 2 3 4 5>;
             timeout-ms = <50>;
-            key-positions = <17 16>;
-            bindings = <&kp RALT>;
+            // U + Y
+            key-positions = <7 8>;
+            bindings = <&kp DEL>;
         };
-        
-                    combo_lalt {
+        combo_gm_capsword {
+            layers = <0 1 2 3 4 5>;
+            timeout-ms = <100>;
+            // G + M
+            key-positions = <14 15>;
+            bindings = <&caps_word>;
+        };
+        combo_xc_ctrl {
+            layers = <0 1 2 3 4 5>;
             timeout-ms = <50>;
-            key-positions = <11 12>;
-            bindings = <&kp LALT>;
+            // Z + X
+            key-positions = <22 23>;
+            bindings = <&sk LCTL>;
         };
-        
-                           combo_lgui {
+        combo_commadot_shift {
+            layers = <0 1 2 3 4 5>;
             timeout-ms = <50>;
-            key-positions = <12 13>;
-            bindings = <&kp LGUI>;
+            // , + . = shift
+            key-positions = <27 28>;
+            bindings = <&skq LSHFT>;
         };
-        
-        
-           combo_rgui {
+        combo_cmd {
+            layers = <0 1 2 3 4 5>;
             timeout-ms = <50>;
-            key-positions = <17 18>;
-            bindings = <&kp RGUI>;
+            // SYM + SPC = CMD
+            key-positions = <30 31>;
+            bindings = <&sk LCMD>;
         };
-        
-
-        
+        combo_opt {
+            layers = <0 1 2 3 4 5>;
+            timeout-ms = <50>;
+            // NUM + ENT = OPT
+            key-positions = <32 33>;
+            bindings = <&sk LALT>;
+        };
+        combo_opt_alt {
+            layers = <0 1 2 3 4 5>;
+            timeout-ms = <50>;
+            key-positions = <6 7>;
+            bindings = <&sk LALT>;
+        };
+        combo_cmd_alt {
+            layers = <0 1 2 3 4 5>;
+            timeout-ms = <50>;
+            // NUM + ENT = OPT
+            key-positions = <2 3>;
+            bindings = <&sk LCMD>;
+        };
+        combo_ent {
+            layers = <0 1 2 3 4 5>;
+            timeout-ms = <80>;
+            // SPC + BSPC = ENT
+            key-positions = <31 32>;
+            bindings = <&kp RET>;
+        };
     };
+};
 
+
+
+/ {
         keymap {
                 compatible = "zmk,keymap";
-                
-       		default_layer {
-		bindings = <
-		&kp Q &kp W &kp E &kp R &kp T 						&kp Y &kp U  &kp I    &kp O   &kp P 
-		&kp A &kp S &kp D &kp F &kp G 			        	        &kp H &kp J &kp K &kp L &kp QUOT
-		&mt LSFT Z &kp X &kp C &kp V &kp B				        &kp N &kp M  &kp CMMA &kp DOT &mt LSFT RET
-          				&mo 1 &kp LCTL  				&kp SPC &mo 2 
-		>;
-		};
-
-       		left_layer {
-		bindings = <
-		&kp NUM_1  &kp NUM_2    &kp NUM_3    &kp NUM_4    &kp NUM_5		&kp NUM_6 &kp NUM_7 &kp NUM_8 &kp NUM_9 &kp NUM_0 
-		&kp TAB    &kp LC(S)    &kp DQT      &kp PIPE2     &kp HASH 		&kp MINUS &kp EQL  &kp LBKT &kp RBKT  &kp DEL 
-		&kp ESC    &kp TILDE 	&kp NON_US_BSLH &kp NON_US_HASH  &kp TILDE2 	&kp MINUS &kp GRAVE &kp LBKT &kp RBKT  &kp DEL 
-					    &mo 1  &kp LGUI  					&kp RGUI &mo 2 
-		>;
-		};
-		
-		right_layer {
-		bindings = <
-		&kp BANG  &kp ATSN &kp HASH  &kp DLLR  &kp PRCT    			&kp CRRT  &kp AMPS &kp KMLT &kp LPRN &kp RPRN 
-		&kp HASH  &kp QMARK  &kp FSLH  &kp COLN  &kp SCLN 			&kp MINUS &kp KP_EQUAL  &kp LBRC  &kp RBRC   &kp BKSP
-		&kp LSFT  &kp KPLS &kp LBKT &kp RBKT   &kp BSLH    			&kp UNDER &kp LEFT &kp DOWN &kp UP  &kp RIGHT
-					  &mo 3 &kp LCTL  				&kp SPC  &mo 2 
-		>;
-		};	
-		
-		tri_layer {
-		bindings = <
-		&kp NUM_1  &kp NUM_2    &kp NUM_3    &kp NUM_4    &kp NUM_5 			&trans &trans   &trans   &trans  &trans
-		&kp F1 &kp F2 &kp F3 &kp F4 &kp F5  						&trans &kp PG_UP  &kp K_VOL_UP &kp K_MUTE &trans 
-		&bt BT_CLR  &bt BT_NXT &bt BT_PRV &kp F6 &kp F7   				&trans &kp PG_DN  &kp K_VOL_DN  &trans &trans   
-					 &trans &trans  					&trans &trans 
-		>;
-		};	
-        
-	};
+                colemak_layer {
+// ---------------------------------------------------------------------------
+// |     |  Q  |  W  |  F  |  P  |  B  | |  J  |  L  |  U  |  Y  |  '  |     |
+// |     |  A  |  R  |  S  |  T  |  G  | |  M  |  N  |  E  |  I  |  O  |     |
+// |     |  Z  |  X  |  C  |  D  |  V  | |  K  |  H  |  ,  |  .  |  ?  |     |
+//                   |     |-SYM-| SPC | | BSPC |-NUM-|     |
+                        bindings = <
+   &kp Q &kp W &kp F &kp P &kp B &kp J &kp L   &kp U     &kp Y   &kp SQT
+   &kp A &kp R &kp S &kp T &kp G &kp M &kp N   &kp E     &kp I   &kp O    
+   &kp Z &kp X &kp C &kp D &kp V &kp K &kp H   &kp COMMA &kp DOT &mo FUN  
+            &mo SYM &kp SPACE &lt NAV BSPC &mo NUM 
+                        >;
+                };
+                symbol_layer {
+// ---------------------------------------------------------------------------
+// |     |     |  \  |  %  |  $  |     | |     |  ^  |  [  |  ]  |     |     |
+// |     |  *  |  (  |  )  |  :  |     | |     |  ;  |  {  |  }  |     |     |
+// |     |     |  `  |  @  |  &  |     | |     |  #  |  <  |  >  |     |     |
+//                   |     |_SYM_| SPACE | | BSPC | ESC |     |
+                        bindings = <
+   &none    &kp BSLH  &kp PRCNT &kp DLLR  &none &none &kp CARET &kp LBKT &kp RBKT &none  
+   &kp STAR &kp LPAR  &kp RPAR  &kp COLON &none &none &kp SEMI  &kp LBRC &kp RBRC &none   
+   &none    &kp GRAVE &kp AT    &kp AMPS  &none &none &kp HASH  &kp LT   &kp GT   &none    
+                             &trans &kp SPACE &kp BSPC &kp ESC 
+                        >;
+                };
+                number_layer {
+// ---------------------------------------------------------------------------
+// |     |     |  4  |  5  |  6  |     | |     |  |  |  -  |  /  |     |     |
+// |     |  .  |  1  |  2  |  3  |     | |     |  "  |  _  |  =  |-NAV-|     |
+// |     |  ~  |  7  |  8  |  9  |     | |     |  +  |  ?  |  !  | DEL |     |
+//                   |     |  0  | SPC | | RET |_NUM_|     |
+                        bindings = <
+   &none     &kp N4 &kp N5 &kp N6 &none &none &kp PIPE &kp MINUS &kp FSLH  &none 
+   &kp DOT   &kp N1 &kp N2 &kp N3 &none &none &kp DQT  &kp UNDER &kp EQUAL &mo NAV 
+   &kp TILDE &kp N7 &kp N8 &kp N9 &none &none &kp PLUS &kp QMARK  &kp EXCL &kp DEL
+                 &kp N0 &kp SPACE &kp BSPC  &trans 
+                        >;
+                };
+                fun_layer {
+// ---------------------------------------------------------------------------
+// |     |     | F 6 | F 5 | F 4 | F10 | | BT0 | BT1 | USB | BLE |BTCLR|     |
+// |     |CAPSL| F 3 | F 2 | F 1 | F11 | |VMUTE|VOLDN|VOLUP|BRIDN|BRIUP|     |
+// |     |_FUN_| F 9 | F 8 | F 7 | F12 | |     |     |     |     |     |     |
+//                   |     |_SYM_| SPC | | BSPC|     |     |
+                        bindings = <
+   &none    &kp F4 &kp F5 &kp F6 &kp F10    &bt BT_SEL 0 &bt BT_SEL 1  &out OUT_USB &out OUT_BLE &bt BT_CLR   
+   &kp CAPS &kp F1 &kp F2 &kp F3 &kp F11    &kp K_MUTE   &kp C_VOL_DN  &kp C_VOL_UP &kp C_BRI_DN &kp C_BRI_UP 
+   &trans   &kp F7 &kp F8 &kp F9 &kp F12    &none        &none         &none        &none        &none      
+                         &trans &trans &trans &trans 
+                        >;
+                };
+                nav_layer {
+// ---------------------------------------------------------------------------
+// |     |     |     |     |     |     | |     |     |     |     |     |     |
+// |     |     |     |     |     |     | | LFT | DWN | U P |RIGHT|_NAV_|     |
+// |     |     |     |     |     |     | | HOM |PG_DN|PG_UP| END |     |     |
+//                   |     |     | SPC | | BSPC |_NUM_|    |
+                        bindings = <
+   &none &none &none &none &none &none    &none     &none     &none     &none  
+   &none &none &none &none &none &kp LEFT &kp DOWN  &kp UP    &kp RIGHT &trans 
+   &none &none &none &none &none &kp HOME &kp PG_DN &kp PG_UP &kp END   &none 
+                         &none &trans &trans &trans 
+                        >;
+                };
+        };
 };
